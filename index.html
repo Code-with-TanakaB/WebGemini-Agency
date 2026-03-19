@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebGemini — Digitize Your Vision</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #040d1a; --navy-mid: #071428; --navy-light: #0a1f3d;
+  --slate: #1e2d47; --slate-light: #2a3f5f;
+  --blue: #1d8cf8; --blue-bright: #38b6ff; --blue-glow: rgba(29,140,248,0.18);
+  --cyan: #00e5ff; --text: #e2eaf4; --text-muted: #7a9bbf; --text-dim: #3d5a7a;
+  --border: rgba(29,140,248,0.15); --border-bright: rgba(29,140,248,0.4);
+  --glass: rgba(7,20,40,0.7); --radius: 12px;
+  --mono: 'JetBrains Mono', monospace; --sans: 'Syne', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); background: var(--navy); color: var(--text); overflow-x: hidden; }
+::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: var(--navy); } ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 3px; }
+body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.4; }
+.grid-bg { position: fixed; inset: 0; background-image: linear-gradient(rgba(29,140,248,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(29,140,248,0.04) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: 0; }
+
+/* HEADER */
+header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 0 5%; height: 64px; display: flex; align-items: center; justify-content: space-between; background: rgba(4,13,26,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+.logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-wrap span { font-family: var(--sans); font-weight: 800; font-size: 1.15rem; color: var(--text); letter-spacing: -0.02em; }
+.logo-wrap span em { color: var(--blue-bright); font-style: normal; }
+nav { display: flex; align-items: center; gap: 22px; }
+nav a { font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); text-decoration: none; letter-spacing: 0.08em; transition: color 0.2s; }
+nav a:hover { color: var(--blue-bright); }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 8px; font-family: var(--mono); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.05em; cursor: pointer; transition: all 0.25s; text-decoration: none; border: none; }
+.btn-primary { background: var(--blue); color: #fff; box-shadow: 0 0 20px rgba(29,140,248,0.35); }
+.btn-primary:hover { background: var(--blue-bright); box-shadow: 0 0 32px rgba(56,182,255,0.5); transform: translateY(-1px); }
+.btn-outline { background: transparent; color: var(--blue-bright); border: 1px solid var(--border-bright); }
+.btn-outline:hover { background: var(--blue-glow); }
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+.hamburger span { display: block; width: 22px; height: 2px; background: var(--text-muted); border-radius: 2px; }
+.mobile-nav { display: none; position: fixed; top: 64px; left: 0; right: 0; background: rgba(4,13,26,0.97); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 20px 5%; flex-direction: column; gap: 16px; z-index: 99; }
+.mobile-nav.open { display: flex; }
+.mobile-nav a { font-family: var(--mono); font-size: 0.85rem; color: var(--text-muted); text-decoration: none; padding: 8px 0; border-bottom: 1px solid var(--border); }
+
+/* HERO */
+#hero { position: relative; min-height: 100svh; display: flex; align-items: center; padding: 100px 5% 60px; overflow: hidden; }
+.hero-orb { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; }
+.orb1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(29,140,248,0.15), transparent 70%); top: -100px; right: -100px; }
+.orb2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(0,229,255,0.08), transparent 70%); bottom: -80px; left: -80px; }
+.hero-inner { position: relative; z-index: 1; max-width: 680px; }
+.hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border: 1px solid var(--border-bright); border-radius: 999px; font-family: var(--mono); font-size: 0.7rem; color: var(--blue-bright); margin-bottom: 28px; background: var(--blue-glow); letter-spacing: 0.08em; }
+.hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--blue-bright); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(56,182,255,0.5); } 50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(56,182,255,0); } }
+.hero-headline { font-size: clamp(2.4rem, 7vw, 4.2rem); font-weight: 800; line-height: 1.08; letter-spacing: -0.03em; margin-bottom: 22px; }
+.hero-headline .accent { color: var(--blue-bright); } .hero-headline .dim { color: var(--text-muted); }
+.hero-sub { font-family: var(--mono); font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 36px; max-width: 480px; }
+.hero-sub .kw { color: var(--blue); }
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-bottom: 48px; }
+.hero-stats { display: flex; gap: 36px; flex-wrap: wrap; padding-top: 32px; border-top: 1px solid var(--border); }
+.stat-item { display: flex; flex-direction: column; gap: 4px; }
+.stat-num { font-size: 1.6rem; font-weight: 800; color: var(--blue-bright); letter-spacing: -0.02em; }
+.stat-label { font-family: var(--mono); font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+.hero-code { position: absolute; right: 5%; top: 50%; transform: translateY(-50%); background: var(--navy-light); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; font-family: var(--mono); font-size: 0.72rem; line-height: 1.8; width: min(380px,100%); box-shadow: 0 20px 60px rgba(0,0,0,0.4); display: none; }
+.hero-code .c-blue{color:var(--blue-bright);} .hero-code .c-cyan{color:var(--cyan);} .hero-code .c-muted{color:var(--text-dim);} .hero-code .c-str{color:#a8e6cf;} .hero-code .c-kw{color:#f8a5c2;}
+.code-header { display: flex; align-items: center; gap: 6px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.code-dot { width: 10px; height: 10px; border-radius: 50%; }
+.code-dot:nth-child(1){background:#ff5f57;} .code-dot:nth-child(2){background:#febc2e;} .code-dot:nth-child(3){background:#28c840;}
+.code-fname { font-size: 0.65rem; color: var(--text-dim); margin-left: auto; }
+
+/* SECTIONS */
+section { position: relative; z-index: 1; padding: 80px 5%; }
+.section-tag { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--blue); margin-bottom: 12px; }
+.section-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 16px; }
+.section-sub { font-family: var(--mono); font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; max-width: 520px; margin-bottom: 48px; }
+
+/* SERVICES */
+#services { background: var(--navy-mid); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+.service-card { background: var(--glass); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: all 0.3s; position: relative; overflow: hidden; backdrop-filter: blur(12px); }
+.service-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--blue-glow), transparent 60%); opacity: 0; transition: opacity 0.3s; }
+.service-card:hover { border-color: var(--border-bright); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+.service-card:hover::before { opacity: 1; }
+.service-icon { width: 48px; height: 48px; border-radius: 10px; background: var(--blue-glow); border: 1px solid var(--border-bright); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 1.4rem; }
+.service-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
+.service-desc { font-family: var(--mono); font-size: 0.75rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 18px; }
+.service-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-family: var(--mono); font-size: 0.62rem; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-dim); letter-spacing: 0.05em; }
+
+/* PROJECTS */
+.projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+.project-card { background: var(--navy-light); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: all 0.3s; cursor: pointer; }
+.project-card:hover { border-color: var(--border-bright); transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+.project-thumb { height: 180px; overflow: hidden; } .project-thumb svg { width: 100%; height: 100%; }
+.project-body { padding: 20px; }
+.project-meta { font-family: var(--mono); font-size: 0.65rem; color: var(--blue); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+.project-name { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+.project-desc { font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted); line-height: 1.6; }
+.project-stack { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+
+/* WHY */
+#why { background: var(--navy-mid); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
+.why-card { padding: 30px 24px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--glass); text-align: center; transition: all 0.3s; }
+.why-card:hover { border-color: var(--border-bright); background: var(--navy-light); }
+.why-icon { font-size: 2rem; margin-bottom: 16px; display: block; }
+.why-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; }
+.why-desc { font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted); line-height: 1.7; }
+
+/* ─────────────────────────────────────────
+   REVIEWS  — JS sizes each card to the
+   container width, then translates the
+   strip. No gap arithmetic, no min-width.
+───────────────────────────────────────── */
+#reviews { padding: 80px 5%; }
+
+.reviews-outer {
+  overflow: hidden;
+  width: 100%;
+  border-radius: var(--radius);
+}
+
+.reviews-inner {
+  display: flex;
+  /* width and card widths set by JS */
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.review-card {
+  /* width set by JS */
+  flex-shrink: 0;
+  background: var(--navy-light);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  box-sizing: border-box;
+}
+
+.review-stars { color: #ffd700; font-size: 1rem; margin-bottom: 16px; letter-spacing: 3px; }
+.review-text { font-family: var(--mono); font-size: 0.82rem; color: var(--text-muted); line-height: 1.9; margin-bottom: 24px; font-style: italic; border-left: 3px solid var(--blue); padding-left: 16px; }
+.review-author { display: flex; align-items: center; gap: 14px; }
+.review-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--blue-glow); border: 1px solid var(--border-bright); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: var(--blue-bright); flex-shrink: 0; }
+.review-name { font-size: 0.9rem; font-weight: 700; }
+.review-role { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); margin-top: 2px; }
+
+.reviews-nav { display: flex; gap: 10px; margin-top: 28px; align-items: center; justify-content: center; }
+.reviews-nav button { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border); background: var(--navy-light); color: var(--text-muted); font-size: 1rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+.reviews-nav button:hover { border-color: var(--border-bright); color: var(--blue-bright); }
+.reviews-dots { display: flex; gap: 8px; margin: 0 8px; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--slate-light); transition: all 0.3s; cursor: pointer; border: none; padding: 0; }
+.dot.active { background: var(--blue); width: 20px; border-radius: 4px; }
+
+/* BILLBOARD */
+#billboard { background: linear-gradient(135deg, var(--navy-light) 0%, var(--slate) 50%, var(--navy-light) 100%); border-top: 1px solid var(--border-bright); border-bottom: 1px solid var(--border-bright); text-align: center; padding: 64px 5%; position: relative; overflow: hidden; }
+#billboard::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(29,140,248,0.12), transparent 70%); }
+.billboard-badge { display: inline-block; background: linear-gradient(90deg, #ff6b6b, #ffd93d); color: #000; font-family: var(--mono); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 5px 14px; border-radius: 999px; margin-bottom: 20px; }
+.billboard-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 14px; position: relative; }
+.billboard-sub { font-family: var(--mono); font-size: 0.85rem; color: var(--text-muted); margin-bottom: 32px; position: relative; }
+.billboard-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; }
+.countdown { display: flex; gap: 12px; justify-content: center; margin-bottom: 28px; position: relative; }
+.count-block { display: flex; flex-direction: column; align-items: center; background: var(--glass); border: 1px solid var(--border); border-radius: 8px; padding: 12px 18px; min-width: 64px; backdrop-filter: blur(12px); }
+.count-num { font-size: 1.5rem; font-weight: 800; color: var(--blue-bright); line-height: 1; font-variant-numeric: tabular-nums; }
+.count-label { font-family: var(--mono); font-size: 0.58rem; color: var(--text-dim); margin-top: 4px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* PRICING */
+#quote { background: var(--navy-mid); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; align-items: stretch; margin-bottom: 28px; }
+.pricing-card { background: var(--glass); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 28px; display: flex; flex-direction: column; backdrop-filter: blur(12px); transition: all 0.3s; position: relative; }
+.pricing-card:hover { border-color: var(--border-bright); transform: translateY(-4px); }
+.pricing-featured { border-color: var(--blue); background: linear-gradient(160deg, rgba(29,140,248,0.1), var(--navy-light) 60%); box-shadow: 0 0 0 1px var(--blue), 0 20px 48px rgba(29,140,248,0.15); }
+.pricing-badge { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: var(--blue); color: #fff; font-family: var(--mono); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 16px; border-radius: 999px; white-space: nowrap; }
+.pricing-label { font-size: 1rem; font-weight: 800; margin-bottom: 6px; }
+.pricing-ideal { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); margin-bottom: 20px; line-height: 1.5; }
+.pricing-price { display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+.price-from { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); margin-right: 2px; }
+.price-amount { font-size: 1.9rem; font-weight: 800; color: var(--blue-bright); letter-spacing: -0.03em; line-height: 1; }
+.price-cents { font-size: 1.1rem; }
+.price-period { font-family: var(--mono); font-size: 0.68rem; color: var(--text-muted); }
+.pricing-features { list-style: none; display: flex; flex-direction: column; gap: 11px; margin-bottom: 28px; flex: 1; }
+.pricing-features li { font-family: var(--mono); font-size: 0.74rem; color: var(--text-muted); display: flex; align-items: center; gap: 10px; }
+.feat-check { color: var(--blue-bright); font-size: 0.8rem; flex-shrink: 0; }
+.feat-muted { color: var(--text-dim); font-size: 0.8rem; flex-shrink: 0; opacity: 0.45; }
+.pricing-note { font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); text-align: center; margin-top: 8px; }
+
+/* CONTACT */
+.contact-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+.contact-info p { font-family: var(--mono); font-size: 0.82rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 32px; }
+.contact-detail { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+.cdetail { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--mono); font-size: 0.75rem; color: var(--text-muted); background: var(--navy-light); }
+.cdetail .icon { color: var(--blue-bright); font-size: 1rem; }
+.form-card { background: var(--navy-light); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; }
+.form-header { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+.form-filename { font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim); margin-left: 6px; }
+.form-group { margin-bottom: 18px; }
+label { display: block; font-family: var(--mono); font-size: 0.68rem; color: var(--text-muted); letter-spacing: 0.08em; margin-bottom: 8px; }
+label span { color: var(--blue); }
+input, textarea, select { width: 100%; background: var(--slate); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; color: var(--text); font-family: var(--mono); font-size: 0.78rem; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+input:focus, textarea:focus, select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(29,140,248,0.12); }
+input::placeholder, textarea::placeholder { color: var(--text-dim); }
+textarea { resize: vertical; min-height: 100px; }
+select option { background: var(--slate); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.recaptcha-notice { display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.62rem; color: var(--text-dim); margin-top: 14px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; background: rgba(29,140,248,0.04); }
+.recaptcha-notice .shield { color: var(--cyan); font-size: 1rem; }
+
+/* FOOTER */
+footer { background: var(--navy-mid); border-top: 1px solid var(--border); padding: 60px 5% 32px; }
+.footer-grid { display: grid; grid-template-columns: 1.5fr repeat(3, 1fr); gap: 40px; margin-bottom: 48px; }
+.footer-brand p { font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted); line-height: 1.7; margin-top: 14px; max-width: 240px; }
+.footer-socials { display: flex; gap: 10px; margin-top: 20px; }
+.social-btn { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--navy-light); display: flex; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+.social-btn:hover { border-color: var(--border-bright); color: var(--blue-bright); }
+.footer-col h4 { font-size: 0.8rem; font-weight: 700; margin-bottom: 16px; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-col ul a { font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+.footer-col ul a:hover { color: var(--blue-bright); }
+.footer-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-top: 28px; border-top: 1px solid var(--border); }
+.footer-bottom p { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); }
+.stack-badge { display: flex; gap: 8px; align-items: center; font-family: var(--mono); font-size: 0.62rem; color: var(--text-dim); }
+.stack-pill { padding: 3px 8px; border: 1px solid var(--border); border-radius: 4px; color: var(--blue); background: rgba(29,140,248,0.06); }
+
+/* MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(4,13,26,0.85); backdrop-filter: blur(8px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.35s; }
+.modal-overlay.visible { opacity: 1; pointer-events: all; }
+.modal { background: var(--navy-light); border: 1px solid var(--border-bright); border-radius: 16px; padding: 36px; max-width: 420px; width: 100%; position: relative; box-shadow: 0 40px 80px rgba(0,0,0,0.6); transform: translateY(20px); transition: transform 0.35s; }
+.modal-overlay.visible .modal { transform: translateY(0); }
+.modal-close { position: absolute; top: 16px; right: 16px; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--border); background: var(--slate); color: var(--text-muted); font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.modal-close:hover { border-color: var(--border-bright); color: var(--text); }
+.modal-badge { display: inline-block; background: var(--blue-glow); border: 1px solid var(--border-bright); border-radius: 999px; font-family: var(--mono); font-size: 0.62rem; color: var(--blue-bright); padding: 4px 12px; letter-spacing: 0.08em; margin-bottom: 16px; }
+.modal h3 { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.02em; }
+.modal p { font-family: var(--mono); font-size: 0.75rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 24px; }
+.modal-form { display: flex; flex-direction: column; gap: 12px; }
+.modal-offer { display: flex; gap: 10px; align-items: center; padding: 12px; background: rgba(0,229,255,0.05); border: 1px dashed rgba(0,229,255,0.2); border-radius: 8px; font-family: var(--mono); font-size: 0.68rem; color: var(--cyan); margin-bottom: 8px; }
+
+/* SCROLL REVEAL */
+.reveal { opacity: 1; transform: none; transition: opacity 0.6s ease, transform 0.6s ease; }
+.js-ready .reveal { opacity: 0; transform: translateY(24px); }
+.reveal.visible { opacity: 1 !important; transform: translateY(0) !important; }
+
+/* RESPONSIVE */
+@media (max-width: 900px) { .contact-wrap { grid-template-columns: 1fr; } .footer-grid { grid-template-columns: 1fr 1fr; } .hero-code { display: none !important; } }
+@media (max-width: 640px) { nav { display: none; } .hamburger { display: flex; } .footer-grid { grid-template-columns: 1fr; } .form-row { grid-template-columns: 1fr; } .why-grid { grid-template-columns: 1fr; } section { padding: 60px 5%; } }
+@media (min-width: 1024px) { .hero-code { display: block; } .hero-inner { max-width: 560px; } }
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<!-- HEADER -->
+<header>
+  <a href="#" class="logo-wrap">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="36" height="36" rx="9" fill="#071428"/>
+      <rect width="36" height="36" rx="9" fill="url(#lg)" fill-opacity="0.15"/>
+      <path d="M5 10L8.5 24L12 15L15.5 24L19 10" stroke="#1d8cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M20 18H26V22C26 23.1 25.1 24 24 24H22C20.9 24 20 23.1 20 22V14C20 12.9 20.9 12 22 12H24C25.1 12 26 12.9 26 14V16" stroke="#38b6ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <defs><linearGradient id="lg" x1="0" y1="0" x2="36" y2="36"><stop offset="0%" stop-color="#1d8cf8"/><stop offset="100%" stop-color="#00e5ff"/></linearGradient></defs>
+    </svg>
+    <span>Web<em>Gemini</em></span>
+  </a>
+  <nav>
+    <a href="#services">Services</a>
+    <a href="#projects">Work</a>
+    <a href="#why">About</a>
+    <a href="#reviews">Reviews</a>
+    <a href="#quote">Pricing</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <button class="hamburger" onclick="toggleMobileNav()" aria-label="Menu"><span></span><span></span><span></span></button>
+</header>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="#services" onclick="closeMobileNav()">Services</a>
+  <a href="#projects" onclick="closeMobileNav()">Work</a>
+  <a href="#why" onclick="closeMobileNav()">About</a>
+  <a href="#reviews" onclick="closeMobileNav()">Reviews</a>
+  <a href="#quote" onclick="closeMobileNav()">Pricing</a>
+  <a href="#contact" onclick="closeMobileNav()">Contact</a>
+  <a href="#" onclick="openModal();closeMobileNav();return false;" style="color:var(--blue-bright)">Sign Up Free</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-orb orb1"></div><div class="hero-orb orb2"></div>
+  <div class="hero-inner">
+    <div class="hero-badge">Available for new projects — 2025</div>
+    <h1 class="hero-headline">Digitize Your<br><span class="accent">Vision</span> with<br><span class="dim">WebGemini</span></h1>
+    <p class="hero-sub">We build <span class="kw">professional websites</span> for South African small businesses — from spaza shops to guest houses. Get online, get found, get customers. Powered by <span class="kw">Python</span>, <span class="kw">Django</span> &amp; <span class="kw">JavaScript</span>.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn btn-primary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>Start a Project</a>
+      <a href="#projects" class="btn btn-outline">View Our Work</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item"><span class="stat-num">48+</span><span class="stat-label">Projects Shipped</span></div>
+      <div class="stat-item"><span class="stat-num">99%</span><span class="stat-label">Client Satisfaction</span></div>
+      <div class="stat-item"><span class="stat-num">3×</span><span class="stat-label">Avg Traffic Growth</span></div>
+    </div>
+  </div>
+  <div class="hero-code">
+    <div class="code-header"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><span class="code-fname">webgemini/views.py</span></div>
+    <div><span class="c-kw">from</span> <span class="c-blue">django.http</span> <span class="c-kw">import</span> JsonResponse<br><span class="c-kw">from</span> <span class="c-blue">.models</span> <span class="c-kw">import</span> Project<br><br><span class="c-muted"># @ratelimit(key='ip')</span><br><span class="c-kw">def</span> <span class="c-cyan">get_portfolio</span>(request):<br>&nbsp;&nbsp;projects = Project.objects<br>&nbsp;&nbsp;&nbsp;&nbsp;.filter(<span class="c-str">live=True</span>)<br>&nbsp;&nbsp;&nbsp;&nbsp;.order_by(<span class="c-str">'-created'</span>)<br>&nbsp;&nbsp;<span class="c-kw">return</span> JsonResponse({<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-str">'status'</span>: <span class="c-cyan">200</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-str">'data'</span>: list(projects)<br>&nbsp;&nbsp;})<br></div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-tag">// What We Do</div>
+  <h2 class="section-title reveal">Skills &amp; Services</h2>
+  <p class="section-sub reveal">Full-stack solutions tailored for growth. From technical SEO to precision email marketing — we cover every digital touchpoint.</p>
+  <div class="services-grid">
+    <div class="service-card reveal"><div class="service-icon">🔍</div><div class="service-title">Technical SEO</div><div class="service-desc">Structured data, Core Web Vitals optimisation, and crawl budget management. We make Google love your site at the code level.</div><div class="service-tags"><span class="tag">Schema.org</span><span class="tag">PageSpeed</span><span class="tag">CWV</span><span class="tag">Sitemaps</span></div></div>
+    <div class="service-card reveal"><div class="service-icon">📧</div><div class="service-title">Email Marketing</div><div class="service-desc">Automated drip campaigns, segmentation, and A/B testing. We design sequences that nurture leads from cold to converted.</div><div class="service-tags"><span class="tag">Mailchimp</span><span class="tag">Automation</span><span class="tag">A/B Test</span><span class="tag">DMARC</span></div></div>
+    <div class="service-card reveal"><div class="service-icon">⚡</div><div class="service-title">Web Development</div><div class="service-desc">Django REST APIs, React frontends, and PostgreSQL backends. Shipped fast, built to last, monitored 24/7.</div><div class="service-tags"><span class="tag">Django</span><span class="tag">React</span><span class="tag">PostgreSQL</span><span class="tag">Docker</span></div></div>
+    <div class="service-card reveal"><div class="service-icon">📊</div><div class="service-title">Analytics &amp; CRO</div><div class="service-desc">Custom dashboards, funnel analysis, and conversion rate optimisation grounded in real behavioural data.</div><div class="service-tags"><span class="tag">GA4</span><span class="tag">Mixpanel</span><span class="tag">Heatmaps</span><span class="tag">Funnels</span></div></div>
+    <div class="service-card reveal"><div class="service-icon">🔒</div><div class="service-title">Security &amp; DevOps</div><div class="service-desc">SSL hardening, CSRF protection, rate limiting, and CI/CD pipelines. Security baked in, not bolted on.</div><div class="service-tags"><span class="tag">Nginx</span><span class="tag">SSL/TLS</span><span class="tag">GitHub CI</span><span class="tag">Vault</span></div></div>
+    <div class="service-card reveal"><div class="service-icon">📱</div><div class="service-title">Mobile-First Design</div><div class="service-desc">Responsive interfaces that score 90+ on Lighthouse. Pixel-perfect on every screen from watch to 4K monitor.</div><div class="service-tags"><span class="tag">Figma</span><span class="tag">WCAG 2.1</span><span class="tag">Lighthouse</span><span class="tag">PWA</span></div></div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-tag">// Portfolio</div>
+  <h2 class="section-title reveal">Recent Work</h2>
+  <p class="section-sub reveal">Real websites built for real South African businesses — from Limpopo to the Cape.</p>
+  <div class="projects-grid">
+    <div class="project-card reveal">
+      <div class="project-thumb">
+        <svg viewBox="0 0 380 180" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="sg" x1="0" y1="0" x2="380" y2="180" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#1a0a00"/><stop offset="100%" stop-color="#071428"/></linearGradient></defs>
+          <rect width="380" height="180" fill="url(#sg)"/>
+          <rect x="0" y="50" width="380" height="4" rx="2" fill="#c8721a" opacity="0.4"/>
+          <rect x="0" y="110" width="380" height="4" rx="2" fill="#c8721a" opacity="0.4"/>
+          <rect x="18" y="25" width="28" height="26" rx="4" fill="#e87c1e" opacity="0.85"/><rect x="52" y="20" width="22" height="30" rx="3" fill="#f5a623" opacity="0.9"/><rect x="80" y="28" width="26" height="22" rx="4" fill="#d94f1e" opacity="0.8"/><rect x="112" y="22" width="20" height="28" rx="3" fill="#e87c1e"/><rect x="138" y="26" width="30" height="24" rx="4" fill="#f5a623" opacity="0.85"/><rect x="174" y="18" width="22" height="32" rx="3" fill="#c8721a" opacity="0.9"/><rect x="202" y="25" width="26" height="25" rx="4" fill="#e87c1e" opacity="0.7"/><rect x="234" y="20" width="20" height="30" rx="3" fill="#d94f1e" opacity="0.85"/><rect x="260" y="27" width="28" height="23" rx="4" fill="#f5a623" opacity="0.8"/><rect x="294" y="22" width="24" height="28" rx="3" fill="#e87c1e" opacity="0.9"/>
+          <rect x="22" y="62" width="32" height="46" rx="4" fill="#1d8cf8" opacity="0.7"/><rect x="60" y="66" width="28" height="42" rx="3" fill="#38b6ff" opacity="0.6"/><rect x="94" y="60" width="36" height="48" rx="4" fill="#1d8cf8" opacity="0.65"/><rect x="136" y="64" width="30" height="44" rx="3" fill="#0a1f3d" stroke="#1d8cf8" stroke-width="1"/><rect x="172" y="60" width="34" height="48" rx="4" fill="#38b6ff" opacity="0.55"/><rect x="212" y="63" width="28" height="45" rx="3" fill="#1d8cf8" opacity="0.7"/><rect x="246" y="58" width="36" height="50" rx="4" fill="#0a1f3d" stroke="#38b6ff" stroke-width="1"/><rect x="288" y="62" width="30" height="46" rx="3" fill="#1d8cf8" opacity="0.6"/><rect x="324" y="60" width="32" height="48" rx="4" fill="#38b6ff" opacity="0.65"/>
+          <rect x="60" y="122" width="260" height="40" rx="8" fill="#0a1f3d" stroke="#e87c1e" stroke-width="1.5" stroke-opacity="0.6"/>
+          <rect x="75" y="133" width="130" height="8" rx="4" fill="#e87c1e" opacity="0.85"/><rect x="260" y="130" width="44" height="22" rx="5" fill="#e87c1e" opacity="0.9"/>
+        </svg>
+      </div>
+      <div class="project-body">
+        <div class="project-meta">Spaza &amp; Retail</div>
+        <div class="project-name">Masala Spaza</div>
+        <div class="project-desc">Online ordering system for a family-run spaza in Soweto. WhatsApp integration, EFT &amp; SnapScan payments, and daily stock updates.</div>
+        <div class="project-stack"><span class="tag">Django</span><span class="tag">SnapScan</span><span class="tag">WhatsApp API</span></div>
+      </div>
+    </div>
+    <div class="project-card reveal">
+      <div class="project-thumb">
+        <svg viewBox="0 0 380 180" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="bg2" x1="0" y1="0" x2="380" y2="180" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#05120a"/><stop offset="100%" stop-color="#071428"/></linearGradient></defs>
+          <rect width="380" height="180" fill="url(#bg2)"/>
+          <circle cx="30" cy="20" r="1.2" fill="#fff" opacity="0.6"/><circle cx="140" cy="18" r="1.4" fill="#fff" opacity="0.7"/><circle cx="270" cy="15" r="1.2" fill="#fff" opacity="0.6"/><circle cx="330" cy="10" r="1" fill="#fff" opacity="0.5"/>
+          <rect x="0" y="130" width="380" height="50" fill="#0a2010" opacity="0.7"/>
+          <polygon points="60,80 190,30 320,80" fill="#8B6914" opacity="0.85"/>
+          <rect x="80" y="80" width="220" height="60" fill="#1a2e1a" stroke="#2a4a2a" stroke-width="1"/>
+          <rect x="100" y="92" width="40" height="30" rx="3" fill="#071428" stroke="#c8a535" stroke-width="1.5" stroke-opacity="0.7"/><line x1="120" y1="92" x2="120" y2="122" stroke="#c8a535" stroke-opacity="0.4" stroke-width="1"/><line x1="100" y1="107" x2="140" y2="107" stroke="#c8a535" stroke-opacity="0.4" stroke-width="1"/>
+          <rect x="240" y="92" width="40" height="30" rx="3" fill="#071428" stroke="#c8a535" stroke-width="1.5" stroke-opacity="0.7"/>
+          <rect x="170" y="100" width="40" height="40" rx="3" fill="#0a1f3d" stroke="#c8a535" stroke-width="1.5" stroke-opacity="0.6"/>
+          <line x1="340" y1="130" x2="340" y2="75" stroke="#2a4a1a" stroke-width="3"/><ellipse cx="340" cy="65" rx="28" ry="18" fill="#1a3a0a" opacity="0.8"/>
+          <rect x="120" y="145" width="140" height="24" rx="6" fill="#0a1f3d" stroke="#c8a535" stroke-width="1" stroke-opacity="0.7"/><rect x="132" y="152" width="70" height="6" rx="3" fill="#c8a535" opacity="0.7"/><rect x="210" y="150" width="40" height="10" rx="3" fill="#1d8cf8" opacity="0.85"/>
+        </svg>
+      </div>
+      <div class="project-body">
+        <div class="project-meta">Hospitality &amp; Tourism</div>
+        <div class="project-name">Thornbush Guest House</div>
+        <div class="project-desc">Booking website for a Limpopo bush guesthouse. Real-time room availability, Airbnb sync, and Google Reviews integration.</div>
+        <div class="project-stack"><span class="tag">React</span><span class="tag">iCal Sync</span><span class="tag">PayFast</span></div>
+      </div>
+    </div>
+    <div class="project-card reveal">
+      <div class="project-thumb">
+        <svg viewBox="0 0 380 180" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="kg" x1="0" y1="0" x2="380" y2="180" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#0d0d1a"/><stop offset="100%" stop-color="#071428"/></linearGradient></defs>
+          <rect width="380" height="180" fill="url(#kg)"/>
+          <rect x="8" y="0" width="12" height="180" fill="#d90000" opacity="0.12"/><rect x="360" y="0" width="12" height="180" fill="#d90000" opacity="0.12"/>
+          <rect x="130" y="90" width="120" height="10" rx="3" fill="#1e2d47" stroke="#38b6ff" stroke-width="1" stroke-opacity="0.5"/>
+          <rect x="145" y="55" width="90" height="38" rx="8" fill="#1a2540" stroke="#1d8cf8" stroke-width="1" stroke-opacity="0.6"/>
+          <rect x="118" y="98" width="14" height="50" rx="4" fill="#1e2d47"/><rect x="248" y="98" width="14" height="50" rx="4" fill="#1e2d47"/>
+          <rect x="155" y="35" width="70" height="22" rx="10" fill="#1a2540" stroke="#1d8cf8" stroke-width="1" stroke-opacity="0.5"/>
+          <text x="178" y="52" font-size="16" fill="#38b6ff" opacity="0.8" font-family="serif">✂</text>
+          <rect x="20" y="20" width="80" height="110" rx="6" fill="none" stroke="#1d8cf8" stroke-width="1.5" stroke-opacity="0.4"/>
+          <rect x="270" y="20" width="96" height="120" rx="8" fill="#0a1f3d" stroke="#1d8cf8" stroke-width="1" stroke-opacity="0.5"/>
+          <rect x="280" y="32" width="76" height="8" rx="4" fill="#1d8cf8" opacity="0.7"/>
+          <rect x="280" y="90" width="76" height="26" rx="5" fill="#1d8cf8" opacity="0.85"/>
+          <rect x="100" y="155" width="180" height="18" rx="6" fill="#0a1f3d" stroke="#d90000" stroke-width="1.5" stroke-opacity="0.6"/>
+          <rect x="116" y="161" width="90" height="6" rx="3" fill="#d90000" opacity="0.6"/>
+        </svg>
+      </div>
+      <div class="project-body">
+        <div class="project-meta">Township Services</div>
+        <div class="project-name">Kasi Kuts Barbershop</div>
+        <div class="project-desc">Appointment booking app for a Tembisa barbershop. Slot management, SMS reminders via Vonage, and a loyalty points system.</div>
+        <div class="project-stack"><span class="tag">Django</span><span class="tag">Vonage SMS</span><span class="tag">JavaScript</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="section-tag">// Why WebGemini</div>
+  <h2 class="section-title reveal">Built Different</h2>
+  <p class="section-sub reveal">We don't just build websites. We build digital infrastructure that works while you sleep.</p>
+  <div class="why-grid">
+    <div class="why-card reveal"><span class="why-icon">⚡</span><div class="why-title">Blazing Performance</div><div class="why-desc">Sub-2s load times guaranteed. We optimise at every layer — from DB queries to CDN configuration and image compression.</div></div>
+    <div class="why-card reveal"><span class="why-icon">🔒</span><div class="why-title">Security First</div><div class="why-desc">CSRF protection, HTTPS enforcement, input sanitisation, and rate limiting built into every project from day one.</div></div>
+    <div class="why-card reveal"><span class="why-icon">📈</span><div class="why-title">Growth-Oriented</div><div class="why-desc">SEO-ready architecture, structured data, and analytics integration ensure your site is primed to rank and convert.</div></div>
+    <div class="why-card reveal"><span class="why-icon">🛠️</span><div class="why-title">Clean Codebase</div><div class="why-desc">Well-documented, version-controlled, and tested code you can hand to any developer. No vendor lock-in.</div></div>
+    <div class="why-card reveal"><span class="why-icon">🤝</span><div class="why-title">Dedicated Support</div><div class="why-desc">24/7 monitoring, monthly reports, and a direct line to your developer. You're never flying blind.</div></div>
+    <div class="why-card reveal"><span class="why-icon">💡</span><div class="why-title">Strategic Thinking</div><div class="why-desc">We ask "why" before "how". Every feature decision is rooted in your business goals and customer behaviour data.</div></div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="section-tag">// Testimonials</div>
+  <h2 class="section-title reveal">Client Stories</h2>
+
+  <div class="reviews-outer" id="reviewsOuter">
+    <div class="reviews-inner" id="reviewsInner">
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">"Before WebGemini, customers couldn't find us on Google. Now we rank on the first page for 'spaza shop Soweto' and orders come in every day through the website. Yoh, it changed everything."</div>
+        <div class="review-author"><div class="review-avatar">ZM</div><div><div class="review-name">Zodwa M.</div><div class="review-role">Owner · Masala Spaza, Soweto</div></div></div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">"Guests used to phone me at midnight to ask if rooms were available. Now the booking system handles everything automatically. WebGemini saved me hours every single week."</div>
+        <div class="review-author"><div class="review-avatar">BN</div><div><div class="review-name">Bongani N.</div><div class="review-role">Manager · Thornbush Guest House, Limpopo</div></div></div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">"My clients can now book their haircuts from their phones, even on Sunday evening. The SMS reminders cut no-shows by more than half. Highly recommended for any township business."</div>
+        <div class="review-author"><div class="review-avatar">TK</div><div><div class="review-name">Thabo K.</div><div class="review-role">Owner · Kasi Kuts Barbershop, Tembisa</div></div></div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">"We're a small accounting firm in PE and couldn't afford a big agency. WebGemini gave us a professional website at a price that made sense. Our enquiries doubled in the first month."</div>
+        <div class="review-author"><div class="review-avatar">NV</div><div><div class="review-name">Naledi V.</div><div class="review-role">Director · Vuka Accounting, Gqeberha</div></div></div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">"Load shedding was messing with our POS system. WebGemini built us an offline-capable web app that still works when the lights go out. That's understanding the South African reality."</div>
+        <div class="review-author"><div class="review-avatar">RP</div><div><div class="review-name">Riaan P.</div><div class="review-role">Owner · Veldt Hardware, Polokwane</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reviews-nav">
+    <button onclick="reviewsSlide(-1)" aria-label="Previous">←</button>
+    <div class="reviews-dots" id="reviewsDots"></div>
+    <button onclick="reviewsSlide(1)" aria-label="Next">→</button>
+  </div>
+</section>
+
+<!-- BILLBOARD -->
+<section id="billboard">
+  <div class="billboard-badge">⚡ Limited Time Offer</div>
+  <h2 class="billboard-title">Free Site Audit<br><span style="color:var(--blue-bright)">Worth R1 499</span></h2>
+  <p class="billboard-sub">Get a full technical, SEO, and performance audit — no strings attached. Offer ends soon.</p>
+  <div class="countdown">
+    <div class="count-block"><span class="count-num" id="cd-h">47</span><span class="count-label">Hours</span></div>
+    <div class="count-block"><span class="count-num" id="cd-m">59</span><span class="count-label">Mins</span></div>
+    <div class="count-block"><span class="count-num" id="cd-s">00</span><span class="count-label">Secs</span></div>
+  </div>
+  <div class="billboard-actions">
+    <a href="#contact" class="btn btn-primary">Claim Free Audit</a>
+    <a href="#" onclick="openModal();return false;" class="btn btn-outline">Sign Up First</a>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="quote">
+  <div class="section-tag">// Pricing</div>
+  <h2 class="section-title reveal">Get a Quote</h2>
+  <p class="section-sub reveal">Transparent, SME-friendly pricing. No hidden costs — just a website that works hard for your business. Starting from <strong style="color:var(--blue-bright)">R999,99/month</strong>.</p>
+  <div class="pricing-grid">
+    <div class="pricing-card reveal">
+      <div class="pricing-label">Starter</div>
+      <div class="pricing-ideal">Ideal for: Spaza shops, hawkers, service providers</div>
+      <div class="pricing-price"><span class="price-from">from</span><span class="price-amount">R999<span class="price-cents">,99</span></span><span class="price-period">/month</span></div>
+      <ul class="pricing-features">
+        <li><span class="feat-check">✓</span> 1-page professional website</li>
+        <li><span class="feat-check">✓</span> Mobile-friendly design</li>
+        <li><span class="feat-check">✓</span> Google Business Profile setup</li>
+        <li><span class="feat-check">✓</span> WhatsApp contact button</li>
+        <li><span class="feat-check">✓</span> SSL certificate &amp; hosting</li>
+        <li><span class="feat-muted">✗</span> Online store</li>
+        <li><span class="feat-muted">✗</span> Booking system</li>
+      </ul>
+      <a href="#contact" class="btn btn-outline" style="width:100%;justify-content:center;margin-top:auto;">Request Quote</a>
+    </div>
+    <div class="pricing-card pricing-featured reveal">
+      <div class="pricing-badge">Most Popular</div>
+      <div class="pricing-label">Growth</div>
+      <div class="pricing-ideal">Ideal for: Guest houses, salons, retailers, clinics</div>
+      <div class="pricing-price"><span class="price-from">from</span><span class="price-amount">R2 499<span class="price-cents">,99</span></span><span class="price-period">/month</span></div>
+      <ul class="pricing-features">
+        <li><span class="feat-check">✓</span> Up to 5-page website</li>
+        <li><span class="feat-check">✓</span> Online booking or order system</li>
+        <li><span class="feat-check">✓</span> PayFast / SnapScan / EFT payments</li>
+        <li><span class="feat-check">✓</span> SEO setup &amp; Google Analytics</li>
+        <li><span class="feat-check">✓</span> Email marketing (500 contacts)</li>
+        <li><span class="feat-check">✓</span> Monthly performance report</li>
+        <li><span class="feat-muted">✗</span> Custom integrations</li>
+      </ul>
+      <a href="#contact" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:auto;">Request Quote</a>
+    </div>
+    <div class="pricing-card reveal">
+      <div class="pricing-label">Pro</div>
+      <div class="pricing-ideal">Ideal for: Growing SMEs, franchises, online stores</div>
+      <div class="pricing-price"><span class="price-from">from</span><span class="price-amount">R4 999<span class="price-cents">,99</span></span><span class="price-period">/month</span></div>
+      <ul class="pricing-features">
+        <li><span class="feat-check">✓</span> Unlimited pages &amp; content</li>
+        <li><span class="feat-check">✓</span> Full e-commerce store</li>
+        <li><span class="feat-check">✓</span> Custom CRM &amp; client portal</li>
+        <li><span class="feat-check">✓</span> Advanced SEO &amp; CRO</li>
+        <li><span class="feat-check">✓</span> Automated email campaigns</li>
+        <li><span class="feat-check">✓</span> Priority support (WhatsApp &amp; call)</li>
+        <li><span class="feat-check">✓</span> Load-shedding resilient hosting</li>
+      </ul>
+      <a href="#contact" class="btn btn-outline" style="width:100%;justify-content:center;margin-top:auto;">Request Quote</a>
+    </div>
+  </div>
+  <p class="pricing-note reveal">All prices exclude VAT. Once-off setup fees may apply. <a href="#contact" style="color:var(--blue-bright)">Contact us</a> for a custom quote.</p>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-wrap">
+    <div class="contact-info">
+      <div class="section-tag">// Get In Touch</div>
+      <h2 class="section-title reveal">Let's Build Something</h2>
+      <p class="reveal">Ready to digitize your vision? Drop us a message and we'll get back to you within one business day.</p>
+      <div class="contact-detail">
+        <div class="cdetail"><span class="icon">📍</span> South Africa · Serving SMEs Nationwide</div>
+        <div class="cdetail"><span class="icon">📧</span> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dbb3beb7b7b49bacbeb9bcbeb6b2b5b2f5bfbead">[email&#160;protected]</a></div>
+        <div class="cdetail"><span class="icon">📞</span><a href="https://wa.me/27678191766" target="_blank" rel="noopener" style="color:var(--text-muted);text-decoration:none;">+27 67 819 1766 (WhatsApp)</a></div>
+        <div class="cdetail"><span class="icon">⏱</span> Response within 24 hours · Mon–Fri</div>
+      </div>
+      <div style="padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--navy-light);font-family:var(--mono);font-size:0.72rem;color:var(--text-muted);line-height:1.8;">
+        <span style="color:var(--blue)">$</span> stack --list<br>
+        <span style="color:var(--cyan)">→</span> Python 3.12 / Django 5<br>
+        <span style="color:var(--cyan)">→</span> JavaScript / React 18<br>
+        <span style="color:var(--cyan)">→</span> PostgreSQL / Redis<br>
+        <span style="color:var(--cyan)">→</span> Docker / Nginx / AWS
+      </div>
+    </div>
+    <div class="form-card reveal">
+      <div class="form-header">
+        <div class="code-dot" style="background:#ff5f57"></div>
+        <div class="code-dot" style="background:#febc2e"></div>
+        <div class="code-dot" style="background:#28c840"></div>
+        <span class="form-filename">contact_form.html — Formspree</span>
+      </div>
+      <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" id="contactForm">
+        <input type="hidden" name="_subject" value="New WebGemini Enquiry">
+        <input type="hidden" name="_captcha" value="true">
+        <div class="form-row">
+          <div class="form-group"><label>Name <span>*</span></label><input type="text" name="name" placeholder="Jane Smith" required></div>
+          <div class="form-group"><label>Email <span>*</span></label><input type="email" name="email" placeholder="jane@company.com" required></div>
+        </div>
+        <div class="form-group"><label>Company / Website</label><input type="text" name="company" placeholder="Acme Inc. / acme.com"></div>
+        <div class="form-group">
+          <label>Service <span>*</span></label>
+          <select name="service" required>
+            <option value="" disabled selected>Select a service…</option>
+            <option>Web Development</option><option>Technical SEO</option><option>Email Marketing</option><option>Analytics &amp; CRO</option><option>Security Audit</option><option>Full Retainer</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Message <span>*</span></label><textarea name="message" placeholder="Tell us about your project, timeline, and budget…" required></textarea></div>
+        <input type="text" name="_gotcha" style="display:none">
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          Send Message
+        </button>
+        <div class="recaptcha-notice"><span class="shield">🛡</span> Protected by Google reCAPTCHA &amp; Django CSRF. Your data is never sold or shared.<span style="margin-left:auto;color:var(--blue);font-size:0.58rem;">Formspree ✓</span></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="logo-wrap">
+        <svg width="32" height="32" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="36" height="36" rx="9" fill="#071428"/><path d="M5 10L8.5 24L12 15L15.5 24L19 10" stroke="#1d8cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 18H26V22C26 23.1 25.1 24 24 24H22C20.9 24 20 23.1 20 22V14C20 12.9 20.9 12 22 12H24C25.1 12 26 12.9 26 14V16" stroke="#38b6ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-family:var(--sans);font-weight:800;font-size:1.1rem;color:var(--text)">Web<em style="color:var(--blue-bright);font-style:normal">Gemini</em></span>
+      </a>
+      <p>We build fast, secure, and scalable web experiences for South African small businesses ready to grow online.</p>
+      <div class="footer-socials">
+        <a href="https://www.linkedin.com/in/tanaka-bvekerwa/" target="_blank" rel="noopener" class="social-btn" aria-label="LinkedIn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+        <a href="https://www.instagram.com/webgemini/" target="_blank" rel="noopener" class="social-btn" aria-label="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+        <a href="https://www.facebook.com/profile.php?id=61580082624291&sk=about" target="_blank" rel="noopener" class="social-btn" aria-label="Facebook"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.313 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <ul><li><a href="#hero">Home</a></li><li><a href="#services">Services</a></li><li><a href="#projects">Work</a></li><li><a href="#why">About</a></li><li><a href="#reviews">Reviews</a></li><li><a href="#quote">Pricing</a></li><li><a href="#contact">Contact</a></li></ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul><li><a href="#">Terms &amp; Conditions</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li><li><a href="#">Cookie Policy</a></li><li><a href="#">POPIA Compliance</a></li></ul>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul><li><a href="#">Web Development</a></li><li><a href="#">Technical SEO</a></li><li><a href="#">Email Marketing</a></li><li><a href="#">Analytics &amp; CRO</a></li><li><a href="#">Security Audit</a></li></ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 WebGemini. All rights reserved. Built with ♥ &amp; Django.</p>
+    <div class="stack-badge"><span>Powered by</span><span class="stack-pill">Python</span><span class="stack-pill">Django</span><span class="stack-pill">JavaScript</span></div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-badge">🎁 Free Offer — Limited Spots</div>
+    <h3>Get Your Free Audit</h3>
+    <p>Sign up now and claim your complimentary R1 499 technical &amp; SEO audit. No credit card. No obligation.</p>
+    <div class="modal-offer"><span>✓</span> Includes: Performance · SEO · Security · Code Quality</div>
+    <div class="modal-form">
+      <input type="text" placeholder="Your full name" id="modal-name">
+      <input type="email" placeholder="Your business email" id="modal-email">
+      <input type="url" placeholder="Your website URL" id="modal-url">
+      <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:4px" onclick="submitModal()">Claim Free Audit →</button>
+      <p style="font-family:var(--mono);font-size:0.62rem;color:var(--text-dim);text-align:center;margin-top:8px">🔒 We respect your privacy. Unsubscribe anytime.</p>
+    </div>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── Mobile Nav
+function toggleMobileNav(){document.getElementById('mobileNav').classList.toggle('open');}
+function closeMobileNav(){document.getElementById('mobileNav').classList.remove('open');}
+
+// ── Modal
+function openModal(){document.getElementById('modalOverlay').classList.add('visible');document.body.style.overflow='hidden';}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('visible');document.body.style.overflow='';}
+function handleOverlayClick(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
+function submitModal(){
+  var name=document.getElementById('modal-name').value;
+  var email=document.getElementById('modal-email').value;
+  if(!name||!email){alert('Please fill in your name and email.');return;}
+  closeModal();
+  alert('🎉 Thanks '+name+'! We\'ll be in touch within 24 hours.');
+}
+window.onload=function(){setTimeout(openModal,10000);};
+
+// ── REVIEWS CAROUSEL
+// Each card is sized to exactly the container width by JS,
+// so translateX(-N * 100%) always lands on a clean card boundary.
+(function(){
+  var outer  = document.getElementById('reviewsOuter');
+  var inner  = document.getElementById('reviewsInner');
+  var dotsEl = document.getElementById('reviewsDots');
+  var cards  = inner.querySelectorAll('.review-card');
+  var total  = cards.length;
+  var cur    = 0;
+  var ticker = null;
+
+  // Build dots
+  for(var i=0;i<total;i++){
+    (function(idx){
+      var d=document.createElement('button');
+      d.className='dot'+(idx===0?' active':'');
+      d.setAttribute('aria-label','Review '+(idx+1));
+      d.onclick=function(){go(idx);resetTick();};
+      dotsEl.appendChild(d);
+    })(i);
+  }
+
+  function size(){
+    var w=outer.clientWidth;
+    inner.style.width=(w*total)+'px';
+    for(var i=0;i<total;i++) cards[i].style.width=w+'px';
+  }
+
+  function go(idx){
+    cur=(idx+total)%total;
+    inner.style.transform='translateX(-'+(cur*outer.clientWidth)+'px)';
+    var dots=dotsEl.querySelectorAll('.dot');
+    for(var i=0;i<dots.length;i++) dots[i].classList.toggle('active',i===cur);
+  }
+
+  function resetTick(){
+    clearInterval(ticker);
+    ticker=setInterval(function(){go(cur+1);},5500);
+  }
+
+  // Global so onclick attributes work
+  window.reviewsSlide=function(dir){go(cur+dir);resetTick();};
+
+  size();
+  go(0);
+  resetTick();
+  window.addEventListener('resize',function(){size();go(cur);});
+})();
+
+// ── Countdown
+(function(){
+  var total=47*3600+59*60;
+  var h=document.getElementById('cd-h');
+  var m=document.getElementById('cd-m');
+  var s=document.getElementById('cd-s');
+  setInterval(function(){
+    if(total<=0)return;
+    total--;
+    h.textContent=String(Math.floor(total/3600)).padStart(2,'0');
+    m.textContent=String(Math.floor((total%3600)/60)).padStart(2,'0');
+    s.textContent=String(total%60).padStart(2,'0');
+  },1000);
+})();
+
+// ── Scroll Reveal
+document.body.classList.add('js-ready');
+var revEls=document.querySelectorAll('.reveal');
+var observer=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});
+},{threshold:0.05});
+revEls.forEach(function(r){observer.observe(r);});
+setTimeout(function(){revEls.forEach(function(r){r.classList.add('visible');});},800);
+
+// ── Contact form
+document.getElementById('contactForm').addEvent
