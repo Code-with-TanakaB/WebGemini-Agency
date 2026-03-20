@@ -786,6 +786,73 @@ var observer=new IntersectionObserver(function(entries){
 },{threshold:0.05});
 revEls.forEach(function(r){observer.observe(r);});
 setTimeout(function(){revEls.forEach(function(r){r.classList.add('visible');});},800);
+
+// ── Form anti-spam cooldown (24h per email)
+(function(){
+  var COOLDOWN_MS = 24 * 60 * 60 * 1000;
+  var STORAGE_KEY = 'webgeminiFormCooldownByEmailV1';
+
+  function normalizeEmail(value){
+    return String(value || '').trim().toLowerCase();
+  }
+
+  function readStore(){
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (err) {
+      return {};
+    }
+  }
+
+  function writeStore(store){
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+    } catch (err) {
+      // Ignore storage failures (private mode / quota / disabled storage)
+    }
+  }
+
+  function formatRemaining(ms){
+    var totalMinutes = Math.ceil(ms / 60000);
+    var hours = Math.floor(totalMinutes / 60);
+    var minutes = totalMinutes % 60;
+    if(hours > 0 && minutes > 0) return hours + 'h ' + minutes + 'm';
+    if(hours > 0) return hours + 'h';
+    return Math.max(minutes, 1) + 'm';
+  }
+
+  var forms = document.querySelectorAll('form[action*="formspree.io/f/xvzwybrb"]');
+
+  forms.forEach(function(form){
+    form.addEventListener('submit', function(event){
+      var emailField = form.querySelector('input[name="email"]');
+      var email = normalizeEmail(emailField && emailField.value);
+      if(!email) return;
+
+      var now = Date.now();
+      var store = readStore();
+      var lastSubmittedAt = Number(store[email] || 0);
+      var elapsed = now - lastSubmittedAt;
+
+      if(lastSubmittedAt && elapsed < COOLDOWN_MS){
+        event.preventDefault();
+        var remaining = COOLDOWN_MS - elapsed;
+        alert('You already submitted a request in the last 24 hours. Please try again in ' + formatRemaining(remaining) + '.');
+        return;
+      }
+
+      store[email] = now;
+      writeStore(store);
+
+      var submitBtn = form.querySelector('button[type="submit"]');
+      if(submitBtn){
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.75';
+      }
+    });
+  });
+})();
 </script>
 </body>
 </html>
