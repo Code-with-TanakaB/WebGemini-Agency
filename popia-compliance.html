@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebGemini - POPIA Compliance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #040d1a; --navy-mid: #071428; --navy-light: #0a1f3d;
+  --blue: #1d8cf8; --blue-bright: #38b6ff;
+  --text: #e2eaf4; --text-muted: #7a9bbf;
+  --border: rgba(29,140,248,0.2);
+  --mono: 'JetBrains Mono', monospace; --sans: 'Syne', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--sans);
+  background: radial-gradient(circle at 80% 0%, #0a1f3d 0%, #040d1a 60%);
+  color: var(--text);
+  min-height: 100vh;
+}
+main { max-width: 900px; margin: 0 auto; padding: 72px 5% 96px; }
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 28px; }
+.logo { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.02em; }
+.logo span { color: var(--blue-bright); }
+.back { text-decoration: none; color: var(--blue-bright); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-family: var(--mono); font-size: 0.72rem; }
+.card { background: rgba(7,20,40,0.75); border: 1px solid var(--border); border-radius: 14px; padding: 32px; }
+h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); margin-bottom: 10px; letter-spacing: -0.03em; }
+.meta { font-family: var(--mono); color: var(--text-muted); font-size: 0.72rem; margin-bottom: 22px; }
+h2 { font-size: 1.05rem; margin-top: 24px; margin-bottom: 10px; }
+p, li { font-family: var(--mono); color: var(--text-muted); font-size: 0.8rem; line-height: 1.9; }
+ul { margin: 10px 0 0 18px; }
+.notice {
+  margin-top: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(29,140,248,0.08);
+  padding: 14px;
+}
+</style>
+</head>
+<body>
+<main>
+  <div class="topbar">
+    <div class="logo">Web<span>Gemini</span></div>
+    <a class="back" href="index.html">Back to Home</a>
+  </div>
+
+  <article class="card">
+    <h1>POPIA Compliance</h1>
+    <p class="meta">Effective date: March 20, 2026</p>
+
+    <h2>1. Commitment to POPIA</h2>
+    <p>WebGemini is committed to lawful and responsible processing of personal information in line with the Protection of Personal Information Act (POPIA) of South Africa.</p>
+
+    <h2>2. Processing Principles</h2>
+    <ul>
+      <li>Accountability and transparency in data handling.</li>
+      <li>Purpose-specific collection and use of personal information.</li>
+      <li>Data minimization and secure retention.</li>
+      <li>Safeguards against unauthorized access and misuse.</li>
+    </ul>
+
+    <h2>3. Data Subject Rights</h2>
+    <p>Individuals may request access to personal information, corrections to inaccurate information, or lawful deletion where applicable.</p>
+
+    <h2>4. Operator Management</h2>
+    <p>Where external operators process information on our behalf, contractual controls are used to ensure confidentiality and POPIA-aligned safeguards.</p>
+
+    <h2>5. Incident Response</h2>
+    <p>Any data incident is assessed and managed according to legal obligations, including notifications where required.</p>
+
+    <div class="notice">
+      <p>If you have a POPIA request, submit details through the Hire Us form on the home page and mark your message as a data request.</p>
+    </div>
+  </article>
+</main>
+</body>
+</html>

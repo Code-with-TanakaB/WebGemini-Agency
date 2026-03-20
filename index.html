@@ -96,6 +96,8 @@ section { position: relative; z-index: 1; padding: 80px 5%; }
 .project-name { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
 .project-desc { font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted); line-height: 1.6; }
 .project-stack { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+.project-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; font-family: var(--mono); font-size: 0.68rem; color: var(--blue-bright); text-decoration: none; letter-spacing: 0.05em; }
+.project-link:hover { color: var(--cyan); }
 
 /* WHY */
 #why { background: var(--navy-mid); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
@@ -161,6 +163,15 @@ section { position: relative; z-index: 1; padding: 80px 5%; }
 .count-block { display: flex; flex-direction: column; align-items: center; background: var(--glass); border: 1px solid var(--border); border-radius: 8px; padding: 12px 18px; min-width: 64px; backdrop-filter: blur(12px); }
 .count-num { font-size: 1.5rem; font-weight: 800; color: var(--blue-bright); line-height: 1; font-variant-numeric: tabular-nums; }
 .count-label { font-family: var(--mono); font-size: 0.58rem; color: var(--text-dim); margin-top: 4px; letter-spacing: 0.08em; text-transform: uppercase; }
+.billboard-proof { font-family: var(--mono); font-size: 0.66rem; color: var(--text-dim); margin-top: 16px; position: relative; }
+
+/* SENIOR DEVELOPER */
+#senior-dev { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(7,20,40,0.96) 0%, rgba(10,31,61,0.9) 100%); }
+.senior-card { max-width: 820px; background: var(--glass); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px; backdrop-filter: blur(12px); }
+.senior-name { font-size: clamp(1.3rem, 3vw, 2rem); font-weight: 800; margin-bottom: 8px; letter-spacing: -0.02em; color: var(--blue-bright); }
+.senior-role { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 16px; }
+.senior-bio { font-family: var(--mono); font-size: 0.78rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 20px; max-width: 640px; }
+.senior-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 
 /* PRICING */
 #quote { background: var(--navy-mid); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
@@ -264,7 +275,7 @@ footer { background: var(--navy-mid); border-top: 1px solid var(--border); paddi
     <a href="#why">About</a>
     <a href="#reviews">Reviews</a>
     <a href="#quote">Pricing</a>
-    <a href="#contact">Contact</a>
+    <a href="#contact">Hire Us</a>
   </nav>
   <button class="hamburger" onclick="toggleMobileNav()" aria-label="Menu"><span></span><span></span><span></span></button>
 </header>
@@ -275,7 +286,7 @@ footer { background: var(--navy-mid); border-top: 1px solid var(--border); paddi
   <a href="#why" onclick="closeMobileNav()">About</a>
   <a href="#reviews" onclick="closeMobileNav()">Reviews</a>
   <a href="#quote" onclick="closeMobileNav()">Pricing</a>
-  <a href="#contact" onclick="closeMobileNav()">Contact</a>
+  <a href="#contact" onclick="closeMobileNav()">Hire Us</a>
   <a href="#" onclick="openModal();closeMobileNav();return false;" style="color:var(--blue-bright)">Sign Up Free</a>
 </div>
 
@@ -315,6 +326,23 @@ footer { background: var(--navy-mid); border-top: 1px solid var(--border); paddi
     <div class="service-card reveal"><div class="service-icon">🔒</div><div class="service-title">Security &amp; DevOps</div><div class="service-desc">SSL hardening, CSRF protection, rate limiting, and CI/CD pipelines. Security baked in, not bolted on.</div><div class="service-tags"><span class="tag">Nginx</span><span class="tag">SSL/TLS</span><span class="tag">GitHub CI</span><span class="tag">Vault</span></div></div>
     <div class="service-card reveal"><div class="service-icon">📱</div><div class="service-title">Mobile-First Design</div><div class="service-desc">Responsive interfaces that score 90+ on Lighthouse. Pixel-perfect on every screen from watch to 4K monitor.</div><div class="service-tags"><span class="tag">Figma</span><span class="tag">WCAG 2.1</span><span class="tag">Lighthouse</span><span class="tag">PWA</span></div></div>
   </div>
+</section>
+
+<!-- BILLBOARD -->
+<section id="billboard">
+  <div class="billboard-badge">⚡ Limited Time Offer</div>
+  <h2 class="billboard-title">Free Site Audit<br><span style="color:var(--blue-bright)">Worth R1 499</span></h2>
+  <p class="billboard-sub">Right after seeing what we do, claim your free technical, SEO, and conversion audit. Only a few slots are left this cycle.</p>
+  <div class="countdown">
+    <div class="count-block"><span class="count-num" id="cd-h">47</span><span class="count-label">Hours</span></div>
+    <div class="count-block"><span class="count-num" id="cd-m">59</span><span class="count-label">Mins</span></div>
+    <div class="count-block"><span class="count-num" id="cd-s">00</span><span class="count-label">Secs</span></div>
+  </div>
+  <div class="billboard-actions">
+    <a href="#contact" class="btn btn-primary">Hire Us &amp; Claim Audit</a>
+    <a href="#" onclick="openModal();return false;" class="btn btn-outline">Book a Strategy Call</a>
+  </div>
+  <p class="billboard-proof">Trusted by South African SMEs to launch faster and convert more visitors into paying clients.</p>
 </section>
 
 <!-- PROJECTS -->
@@ -386,10 +414,11 @@ footer { background: var(--navy-mid); border-top: 1px solid var(--border); paddi
         </svg>
       </div>
       <div class="project-body">
-        <div class="project-meta">Township Services</div>
-        <div class="project-name">Kasi Kuts Barbershop</div>
-        <div class="project-desc">Appointment booking app for a Tembisa barbershop. Slot management, SMS reminders via Vonage, and a loyalty points system.</div>
-        <div class="project-stack"><span class="tag">Django</span><span class="tag">Vonage SMS</span><span class="tag">JavaScript</span></div>
+        <div class="project-meta">Education Technology</div>
+        <div class="project-name">IIE TutorTrack</div>
+        <div class="project-desc">A web application we built for IIE Rosebank College tutors to add students they are tutoring and track each student's study progress in one streamlined dashboard.</div>
+        <div class="project-stack"><span class="tag">Django</span><span class="tag">Progress Tracking</span><span class="tag">Tutor Dashboard</span></div>
+        <a class="project-link" href="https://tanakabvekerwa-portfolio-20bf38.netlify.app/" target="_blank" rel="noopener">View Project Portfolio ↗</a>
       </div>
     </div>
   </div>
@@ -452,22 +481,6 @@ footer { background: var(--navy-mid); border-top: 1px solid var(--border); paddi
   </div>
 </section>
 
-<!-- BILLBOARD -->
-<section id="billboard">
-  <div class="billboard-badge">⚡ Limited Time Offer</div>
-  <h2 class="billboard-title">Free Site Audit<br><span style="color:var(--blue-bright)">Worth R1 499</span></h2>
-  <p class="billboard-sub">Get a full technical, SEO, and performance audit — no strings attached. Offer ends soon.</p>
-  <div class="countdown">
-    <div class="count-block"><span class="count-num" id="cd-h">47</span><span class="count-label">Hours</span></div>
-    <div class="count-block"><span class="count-num" id="cd-m">59</span><span class="count-label">Mins</span></div>
-    <div class="count-block"><span class="count-num" id="cd-s">00</span><span class="count-label">Secs</span></div>
-  </div>
-  <div class="billboard-actions">
-    <a href="#contact" class="btn btn-primary">Claim Free Audit</a>
-    <a href="#" onclick="openModal();return false;" class="btn btn-outline">Sign Up First</a>
-  </div>
-</section>
-
 <!-- PRICING -->
 <section id="quote">
   <div class="section-tag">// Pricing</div>
@@ -521,16 +534,16 @@ footer { background: var(--navy-mid); border-top: 1px solid var(--border); paddi
       <a href="#contact" class="btn btn-outline" style="width:100%;justify-content:center;margin-top:auto;">Request Quote</a>
     </div>
   </div>
-  <p class="pricing-note reveal">All prices exclude VAT. Once-off setup fees may apply. <a href="#contact" style="color:var(--blue-bright)">Contact us</a> for a custom quote.</p>
+  <p class="pricing-note reveal">All prices exclude VAT. Once-off setup fees may apply. <a href="#contact" style="color:var(--blue-bright)">Hire us</a> for a custom quote.</p>
 </section>
 
 <!-- CONTACT -->
 <section id="contact">
   <div class="contact-wrap">
     <div class="contact-info">
-      <div class="section-tag">// Get In Touch</div>
-      <h2 class="section-title reveal">Let's Build Something</h2>
-      <p class="reveal">Ready to digitize your vision? Drop us a message and we'll get back to you within one business day.</p>
+      <div class="section-tag">// Hire Us</div>
+      <h2 class="section-title reveal">Hire Us for Your Next Build</h2>
+      <p class="reveal">Ready to turn more visitors into paying clients? Send your project brief and we will respond within one business day.</p>
       <div class="contact-detail">
         <div class="cdetail"><span class="icon">📍</span> South Africa · Serving SMEs Nationwide</div>
         <div class="cdetail"><span class="icon">📧</span> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dbb3beb7b7b49bacbeb9bcbeb6b2b5b2f5bfbead">[email&#160;protected]</a></div>
@@ -550,10 +563,10 @@ footer { background: var(--navy-mid); border-top: 1px solid var(--border); paddi
         <div class="code-dot" style="background:#ff5f57"></div>
         <div class="code-dot" style="background:#febc2e"></div>
         <div class="code-dot" style="background:#28c840"></div>
-        <span class="form-filename">contact_form.html — Formspree</span>
+        <span class="form-filename">hire_us_form.html — Formspree</span>
       </div>
       <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" id="contactForm">
-        <input type="hidden" name="_subject" value="New WebGemini Enquiry">
+        <input type="hidden" name="_subject" value="New WebGemini Hire Us Enquiry">
         <input type="hidden" name="_captcha" value="true">
         <div class="form-row">
           <div class="form-group"><label>Name <span>*</span></label><input type="text" name="name" placeholder="Jane Smith" required></div>
@@ -571,10 +584,25 @@ footer { background: var(--navy-mid); border-top: 1px solid var(--border); paddi
         <input type="text" name="_gotcha" style="display:none">
         <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-          Send Message
+          Hire Us
         </button>
         <div class="recaptcha-notice"><span class="shield">🛡</span> Protected by Google reCAPTCHA &amp; Django CSRF. Your data is never sold or shared.<span style="margin-left:auto;color:var(--blue);font-size:0.58rem;">Formspree ✓</span></div>
       </form>
+    </div>
+  </div>
+</section>
+
+<!-- SENIOR DEVELOPER -->
+<section id="senior-dev">
+  <div class="section-tag">// Meet Our Senior Developer</div>
+  <h2 class="section-title reveal">Meet Our Senior Developer</h2>
+  <div class="senior-card reveal">
+    <div class="senior-name">Tanaka Bvekerwa</div>
+    <p class="senior-role">Senior Developer</p>
+    <p class="senior-bio">Tanaka leads engineering at WebGemini, focusing on high-performance websites and custom applications that help businesses convert visitors into long-term clients through smart UX, clean architecture, and measurable growth systems.</p>
+    <div class="senior-actions">
+      <a href="https://tanakabvekerwa-portfolio-20bf38.netlify.app/" target="_blank" rel="noopener" class="btn btn-primary">View Portfolio</a>
+      <a href="#contact" class="btn btn-outline">Hire Us Today</a>
     </div>
   </div>
 </section>
@@ -596,11 +624,11 @@ footer { background: var(--navy-mid); border-top: 1px solid var(--border); paddi
     </div>
     <div class="footer-col">
       <h4>Navigation</h4>
-      <ul><li><a href="#hero">Home</a></li><li><a href="#services">Services</a></li><li><a href="#projects">Work</a></li><li><a href="#why">About</a></li><li><a href="#reviews">Reviews</a></li><li><a href="#quote">Pricing</a></li><li><a href="#contact">Contact</a></li></ul>
+      <ul><li><a href="#hero">Home</a></li><li><a href="#services">Services</a></li><li><a href="#projects">Work</a></li><li><a href="#why">About</a></li><li><a href="#reviews">Reviews</a></li><li><a href="#quote">Pricing</a></li><li><a href="#contact">Hire Us</a></li></ul>
     </div>
     <div class="footer-col">
       <h4>Legal</h4>
-      <ul><li><a href="#">Terms &amp; Conditions</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li><li><a href="#">Cookie Policy</a></li><li><a href="#">POPIA Compliance</a></li></ul>
+      <ul><li><a href="terms-and-conditions.html">Terms &amp; Conditions</a></li><li><a href="privacy-policy.html">Privacy Policy</a></li><li><a href="terms-of-service.html">Terms of Service</a></li><li><a href="cookie-policy.html">Cookie Policy</a></li><li><a href="popia-compliance.html">POPIA Compliance</a></li></ul>
     </div>
     <div class="footer-col">
       <h4>Services</h4>
