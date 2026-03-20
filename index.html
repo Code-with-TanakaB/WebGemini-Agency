@@ -647,7 +647,12 @@ function submitModal(){
   closeModal();
   alert('🎉 Thanks '+name+'! We\'ll be in touch within 24 hours.');
 }
-window.onload=function(){setTimeout(openModal,10000);};
+document.addEventListener('DOMContentLoaded', function(){
+  setTimeout(function(){
+    var overlay=document.getElementById('modalOverlay');
+    if(overlay && !overlay.classList.contains('visible')) openModal();
+  },10000);
+});
 
 // ── REVIEWS CAROUSEL
 // Each card is sized to exactly the container width by JS,
@@ -656,8 +661,12 @@ window.onload=function(){setTimeout(openModal,10000);};
   var outer  = document.getElementById('reviewsOuter');
   var inner  = document.getElementById('reviewsInner');
   var dotsEl = document.getElementById('reviewsDots');
+  if(!outer || !inner || !dotsEl) return;
+
   var cards  = inner.querySelectorAll('.review-card');
   var total  = cards.length;
+  if(!total) return;
+
   var cur    = 0;
   var ticker = null;
 
@@ -701,17 +710,39 @@ window.onload=function(){setTimeout(openModal,10000);};
 
 // ── Countdown
 (function(){
-  var total=47*3600+59*60;
   var h=document.getElementById('cd-h');
   var m=document.getElementById('cd-m');
   var s=document.getElementById('cd-s');
-  setInterval(function(){
-    if(total<=0)return;
-    total--;
-    h.textContent=String(Math.floor(total/3600)).padStart(2,'0');
-    m.textContent=String(Math.floor((total%3600)/60)).padStart(2,'0');
-    s.textContent=String(total%60).padStart(2,'0');
-  },1000);
+  if(!h || !m || !s) return;
+
+  var storageKey='webgeminiCountdownEndAt';
+  var durationMs=48*60*60*1000;
+  var endAt=Number(localStorage.getItem(storageKey));
+
+  if(!endAt || endAt<=Date.now()){
+    endAt=Date.now()+durationMs;
+    localStorage.setItem(storageKey,String(endAt));
+  }
+
+  function renderCountdown(){
+    var remaining=Math.max(0,endAt-Date.now());
+    var totalSeconds=Math.floor(remaining/1000);
+    var hours=Math.floor(totalSeconds/3600);
+    var mins=Math.floor((totalSeconds%3600)/60);
+    var secs=totalSeconds%60;
+
+    h.textContent=String(hours).padStart(2,'0');
+    m.textContent=String(mins).padStart(2,'0');
+    s.textContent=String(secs).padStart(2,'0');
+
+    if(totalSeconds<=0){
+      clearInterval(timer);
+      localStorage.removeItem(storageKey);
+    }
+  }
+
+  renderCountdown();
+  var timer=setInterval(renderCountdown,1000);
 })();
 
 // ── Scroll Reveal
@@ -724,4 +755,15 @@ revEls.forEach(function(r){observer.observe(r);});
 setTimeout(function(){revEls.forEach(function(r){r.classList.add('visible');});},800);
 
 // ── Contact form
-document.getElementById('contactForm').addEvent
+var contactForm=document.getElementById('contactForm');
+if(contactForm){
+  contactForm.addEventListener('submit',function(event){
+    if(contactForm.action.indexOf('YOUR_FORM_ID')!==-1){
+      event.preventDefault();
+      alert('Please replace YOUR_FORM_ID in the form action with your Formspree form ID.');
+    }
+  });
+}
+</script>
+</body>
+</html>
